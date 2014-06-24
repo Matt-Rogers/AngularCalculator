@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en" ng-app='myApp'>
+<head>
+	<meta charset="UTF-8">
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
+	<link rel="stylesheet" href="css/style.css">
+	<title>Angular Calculator</title>
+</head>
+<body>
+	<div ng-controller = 'MyController'>
+			<table>
+				<tr id="inputScreen"><td colspan="4"><input style="text-align: right" type="text" ng-model="number.input"><td></tr>
+				
+					<tr>
+						<td><button ng-click="clear('clear')">{{ operator.clear }}</button></td>
+						<td><button ng-click="clear('clearError')">{{ operator.clearError }}</button></td>
+						<td><button ng-click="clear('backspace')">{{ operator.backspace }}</button></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td><button ng-click="numberString(number.one, number.input)">{{ number.one }}</button></td>
+						<td><button ng-click="numberString(number.two, number.input)">{{ number.two }}</button></td>
+						<td><button ng-click="numberString(number.three, number.input)">{{ number.three }}</button></td>
+						<td><button ng-click="expression(operator.add, number.input)">{{ operator.add }}</button></td>
+					</tr>
+					<tr>
+						<td><button ng-click="numberString(number.four, number.input)">{{ number.four }}</button></td>
+						<td><button ng-click="numberString(number.five, number.input)">{{ number.five }}</button></td>
+						<td><button ng-click="numberString(number.six, number.input)">{{ number.six }}</button></td>
+						<td><button ng-click="expression(operator.sub, number.input)">{{ operator.sub }}</button></td>
+					</tr>
+					<tr>
+						<td><button ng-click="numberString(number.seven, number.input)">{{ number.seven }}</button></td>
+						<td><button ng-click="numberString(number.eight, number.input)">{{ number.eight }}</button></td>
+						<td><button ng-click="numberString(number.nine, number.input)">{{ number.nine }}</button></td>
+						<td><button ng-click="expression(operator.multi, number.input)">{{ operator.multi }}</button></td>
+					</tr>
+					<tr>
+						<td><button ng-click="numberString(number.dec, number.input)">{{ number.dec }}</button></td>
+						<td><button ng-click="numberString(number.zero, number.input)">{{ number.zero }}</button></td>
+						<td><button ng-click="evaluate(number.input)">{{ operator.equal }}</button></td>
+						<td><button ng-click="expression(operator.div, number.input)">{{ operator.div }}</button></td>
+					</tr>
+			
+			</table>
+	</div>
+
+</body>
+<script type="text/javascript">
+	var app = angular.module('myApp', []);
+
+	app.controller('MyController', function($scope){
+		
+		$scope.number={
+			one: 1,
+			two: 2,
+			three: 3,
+			four: 4,
+			five: 5,
+			six: 6,
+			seven: 7,
+			eight: 8,
+			nine: 9,
+			zero:0,
+			dec: '.',
+			input: '',
+			expression: '',
+			total: 0
+			};
+		$scope.operator={
+			add : '+',
+			sub : '-',
+			multi : '*',
+			div : '/',
+			equal : '=',
+			clear: 'c',
+			clearError: 'ce',
+			backspace: '<-'
+		};
+		$scope.numberString = function(num,numString){ 
+			$scope.number.input+=num; 
+		};
+		$scope.expression = function(oper,numString){ 
+			$scope.number.expression+=$scope.number.input;
+			$scope.number.expression += oper;
+			$scope.number.input = '';
+		};
+		$scope.evaluate = function(expr){
+			try{ 
+				$scope.number.expression+=$scope.number.input;
+				$scope.total = eval($scope.number.expression);
+				$scope.number.input = $scope.total;
+				$scope.number.expression = '';
+			}
+			catch(err){console.log('ignore');}
+		};
+		$scope.clear = function(clearOp){
+			if (clearOp === 'clear'){
+				$scope.number.expression = '';
+				$scope.number.input = '';
+			}else{
+				if(clearOp === 'clearError'){
+					$scope.number.input = '';
+					}
+				else{
+					if(clearOp ==='backspace'){
+						try{
+							$scope.number.input = $scope.number.input.substring(0, $scope.number.input.length -1);
+						}
+						catch(err){			$scope.number.input = 'ERR'			}
+					}
+				}
+			}
+		}
+	});
+
+
+</script>
+
+</html>
